@@ -80,14 +80,14 @@ def main():
             ys = [x[1] for x in cluster_list[i]]
             color = str(i+1)
             plt.plot(xs, ys, color)
-        name = 'q1_k_is_' + str(number_of_clusters) + '.png'
+        name = './figures/q1_k_is_' + str(number_of_clusters) + '.png'
         plt.savefig(name)
         '''
     plt.plot(list(range(1, len(mean_errors) + 1)), mean_errors, color='g')
     plt.xlabel('K')
     plt.ylabel('Mean error')
     plt.title('Average clustering error of k-means for different values of k')
-    plt.savefig('ks.png')
+    plt.savefig('./figures/ks.png')
 
 
 if __name__ == "__main__":
