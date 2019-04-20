@@ -2,6 +2,7 @@ import numpy as np
 import random
 import pandas
 import matplotlib.pyplot as plt
+from sklearn import metrics
 
 
 def compute_euclidean_distance(point, centroid):
@@ -110,7 +111,67 @@ def weaknesses_and_restrictions_of_k_means():
     plt.savefig(name)
 
 
+def silhouette_score_on_ds1_when_k_is(n):
+    data_points = np.asarray(pandas.read_csv('./data/Dataset1.csv').values.tolist())
+    fig, ax = plt.subplots()
+    number_of_clusters = n
+    centroids = create_centroids(data_points, number_of_clusters)
+    total_iteration = 10
+    [cluster_label, new_centroids] = iterate_k_means(data_points, centroids, total_iteration)
+    cluster_list = []
+    labels_list = []
+    all_points = []
+    all_labels = []
+    for i in range(number_of_clusters):
+        cluster_list.append([list(x[1]) for x in cluster_label if x[0] == i])
+        labels_list.append(list(np.ones(len(cluster_list[i])) * (i + 1)))
+    for i in range(number_of_clusters):
+        all_points += cluster_list[i]
+        all_labels += labels_list[i]
+    unique_labels = set(all_labels)
+    if len(unique_labels) > 1:
+        print("Silhouette Coefficient for k-means on dataset1 k = " + str(n) + ": %f" % metrics.silhouette_score(all_points, all_labels))
+    for i in range(number_of_clusters):
+        xs = [x[0] for x in cluster_list[i]]
+        ys = [x[1] for x in cluster_list[i]]
+        color = str(i + 1)
+        ax.plot(xs, ys, color)
+    name = './figures/for_silhouette_score_on_ds1_when_k_is_' + str(n) + '.png'
+    fig.savefig(name)
+
+
+def silhouette_score_on_ds2_when_k_is_4():
+    data_points = np.asarray(pandas.read_csv('./data/Dataset2.csv').values.tolist())
+    fig, ax = plt.subplots()
+    number_of_clusters = 4
+    centroids = create_centroids(data_points, number_of_clusters)
+    total_iteration = 10
+    [cluster_label, new_centroids] = iterate_k_means(data_points, centroids, total_iteration)
+    cluster_list = []
+    labels_list = []
+    all_points = []
+    all_labels = []
+    for i in range(number_of_clusters):
+        cluster_list.append([list(x[1]) for x in cluster_label if x[0] == i])
+        labels_list.append(list(np.ones(len(cluster_list[i])) * (i + 1)))
+    for i in range(number_of_clusters):
+        all_points += cluster_list[i]
+        all_labels += labels_list[i]
+    unique_labels = set(all_labels)
+    if len(unique_labels) > 1:
+        print("Silhouette Coefficient for k-means on dataset2 k = 4: %f" % metrics.silhouette_score(all_points, all_labels))
+    for i in range(number_of_clusters):
+        xs = [x[0] for x in cluster_list[i]]
+        ys = [x[1] for x in cluster_list[i]]
+        color = str(i + 1)
+        ax.plot(xs, ys, color)
+    name = './figures/for_silhouette_score_on_ds2_when_k_is_4.png'
+    fig.savefig(name)
+
 if __name__ == "__main__":
     # running_k_means()
     # evaluation()
-    weaknesses_and_restrictions_of_k_means()
+    # weaknesses_and_restrictions_of_k_means()
+    silhouette_score_on_ds1_when_k_is(2)
+    silhouette_score_on_ds1_when_k_is(4)
+    silhouette_score_on_ds2_when_k_is_4()
