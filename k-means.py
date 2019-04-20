@@ -36,14 +36,6 @@ def iterate_k_means(data_points, centroids, total_iteration):
     return [cluster_label, centroids]
 
 
-def print_label_data(result):
-    print("Result of k-Means Clustering: \n")
-    for data in result[0]:
-        print("data point: {}".format(data[1]))
-        print("cluster number: {} \n".format(data[0]))
-    print("Last centroids position: \n {}".format(result[1]))
-
-
 def create_centroids(X, k):
     rands = []
     centroids = []
@@ -67,13 +59,12 @@ def running_k_means():
         cluster_list = []
         for i in range(number_of_clusters):
             cluster_list.append([list(x[1]) for x in cluster_label if x[0] == i])
-        # Result of clustering!
         for i in range(number_of_clusters):
             xs = [x[0] for x in cluster_list[i]]
             ys = [x[1] for x in cluster_list[i]]
-            color = str(i+1)
+            color = str(i + 1)
             ax.plot(xs, ys, color)
-        name = './figures/q1_k_is_' + str(number_of_clusters) + '.png'
+        name = './figures/k_means_when_k_is_' + str(number_of_clusters) + '.png'
         fig.savefig(name)
 
 
@@ -110,15 +101,16 @@ def weaknesses_and_restrictions_of_k_means():
     cluster_list = []
     for i in range(number_of_clusters):
         cluster_list.append([list(x[1]) for x in cluster_label if x[0] == i])
-    # Result of clustering!
     for i in range(number_of_clusters):
         xs = [x[0] for x in cluster_list[i]]
         ys = [x[1] for x in cluster_list[i]]
-        color = str(i+1)
+        color = str(i + 1)
         plt.plot(xs, ys, color)
-    name = './figures/shows_weakness.png'
+    name = './figures/shows_weakness_of_k_means.png'
     plt.savefig(name)
+
+
 if __name__ == "__main__":
-    running_k_means()
+    # running_k_means()
     # evaluation()
-    # weaknesses_and_restrictions_of_k_means()
+    weaknesses_and_restrictions_of_k_means()
