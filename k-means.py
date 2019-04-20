@@ -56,7 +56,28 @@ def create_centroids(X, k):
     return np.array(centroids)
 
 
-def main():
+def running_k_means():
+    data_points = np.asarray(pandas.read_csv('./data/Dataset1.csv').values.tolist())
+    for j in range(2, 5):
+        fig, ax = plt.subplots()
+        number_of_clusters = j
+        centroids = create_centroids(data_points, number_of_clusters)
+        total_iteration = 10
+        [cluster_label, new_centroids] = iterate_k_means(data_points, centroids, total_iteration)
+        cluster_list = []
+        for i in range(number_of_clusters):
+            cluster_list.append([list(x[1]) for x in cluster_label if x[0] == i])
+        # Result of clustering!
+        for i in range(number_of_clusters):
+            xs = [x[0] for x in cluster_list[i]]
+            ys = [x[1] for x in cluster_list[i]]
+            color = str(i+1)
+            ax.plot(xs, ys, color)
+        name = './figures/q1_k_is_' + str(number_of_clusters) + '.png'
+        fig.savefig(name)
+
+
+def evaluation():
     data_points = np.asarray(pandas.read_csv('./data/Dataset1.csv').values.tolist())
     mean_errors = []
     for j in range(1, 30):
@@ -73,16 +94,6 @@ def main():
             sub_res = np.subtract(cluster_arrays[i][:], new_centroids[i])
             error_from_center.append(np.mean(np.sqrt(np.sum((sub_res) ** 2, axis=1))))
         mean_errors.append(np.mean(np.asarray(error_from_center)))
-        # Result of clustering!
-        '''
-        for i in range(number_of_clusters):
-            xs = [x[0] for x in cluster_list[i]]
-            ys = [x[1] for x in cluster_list[i]]
-            color = str(i+1)
-            plt.plot(xs, ys, color)
-        name = './figures/q1_k_is_' + str(number_of_clusters) + '.png'
-        plt.savefig(name)
-        '''
     plt.plot(list(range(1, len(mean_errors) + 1)), mean_errors, color='g')
     plt.xlabel('K')
     plt.ylabel('Mean error')
@@ -90,5 +101,24 @@ def main():
     plt.savefig('./figures/ks.png')
 
 
+def weaknesses_and_restrictions_of_k_means():
+    data_points = np.asarray(pandas.read_csv('./data/Dataset2.csv').values.tolist())
+    number_of_clusters = 3
+    centroids = create_centroids(data_points, number_of_clusters)
+    total_iteration = 10
+    [cluster_label, new_centroids] = iterate_k_means(data_points, centroids, total_iteration)
+    cluster_list = []
+    for i in range(number_of_clusters):
+        cluster_list.append([list(x[1]) for x in cluster_label if x[0] == i])
+    # Result of clustering!
+    for i in range(number_of_clusters):
+        xs = [x[0] for x in cluster_list[i]]
+        ys = [x[1] for x in cluster_list[i]]
+        color = str(i+1)
+        plt.plot(xs, ys, color)
+    name = './figures/shows_weakness.png'
+    plt.savefig(name)
 if __name__ == "__main__":
-    main()
+    running_k_means()
+    # evaluation()
+    # weaknesses_and_restrictions_of_k_means()
